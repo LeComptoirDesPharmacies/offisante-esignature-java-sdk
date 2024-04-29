@@ -17,11 +17,16 @@ public class ApiClientRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(feign.RequestTemplate template) {
-        Token token = getToken();
-        template.header("x-access-token", token.getToken());
+        template.header("x-access-token", getValidToken().getToken());
     }
 
-    private synchronized Token getToken(){
+    /**
+     * Get a valid token (non expired)
+     * This method is thread safe, only one thread can get a token at a time
+     *
+     * @return a valid token
+     */
+    private synchronized Token getValidToken(){
         Token token = tokenRepository.findToken();
 
         // If token is null or expired, create a new token

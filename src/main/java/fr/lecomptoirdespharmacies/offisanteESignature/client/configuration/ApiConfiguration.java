@@ -14,7 +14,7 @@ public class ApiConfiguration {
     public ApiConfiguration(String userName, String password, Configuration.ENV environment) {
         Configuration configuration = Configuration.buildConfiguration(userName, password, environment);
         this.loginClient = initializeLoginApiClient(configuration);
-        this.apiClient = initializeApiClient(configuration, this.loginClient, new TokenRepository());
+        this.apiClient = initializeApiClient(configuration);
     }
 
     /**
@@ -34,12 +34,11 @@ public class ApiConfiguration {
      * Initialize api client with error decoder and authorization interceptor
      *
      * @param configuration configuration
-     * @param loginClient login client
-     * @param tokenRepository token repository
      *
      * @return api client
      */
-    private ApiClient initializeApiClient(Configuration configuration, ApiClient loginClient, TokenRepository tokenRepository){
+    private ApiClient initializeApiClient(Configuration configuration){
+        TokenRepository tokenRepository = new TokenRepository();
         LoginService loginService = new LoginService(configuration.getLoginRequest(), loginClient, tokenRepository);
         return new CustomApiClient()
                 .withErrorDecoder(new ApiClientErrorDecoder(tokenRepository))

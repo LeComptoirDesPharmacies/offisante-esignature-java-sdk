@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Token {
-    private String token;
-    private LocalDateTime createdAt;
+    private final String token;
+    private final LocalDateTime createdAt;
     private final Duration duration;
 
     public Token(String token, Duration duration) {

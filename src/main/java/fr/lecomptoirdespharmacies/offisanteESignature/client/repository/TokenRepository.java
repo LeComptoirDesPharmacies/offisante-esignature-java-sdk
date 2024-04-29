@@ -10,11 +10,11 @@ public class TokenRepository {
 
     private Token token;
 
-    public Token findToken() {
+    public synchronized Token findToken() {
         return token;
     }
 
-    public void save(Token token) {
+    public synchronized void save(Token token) {
         this.token = token;
     }
 }

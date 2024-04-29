@@ -47,9 +47,9 @@ String environment = Configuration.ENV.DEV;
 OffisanteESignatureApi offisanteEsignatureApi = new OffisanteESignatureApi(userName, password, environment);
 ```
 
-### Create a signature request
+### Create a document request
 
-You can create a signature request by calling the `createSignatureRequest` method:
+You can create a document request by calling the `createDocument` method:
 
 ```java
 

@@ -3,7 +3,6 @@ package fr.lecomptoirdespharmacies.offisanteESignature.client.custom;
 import feign.codec.ErrorDecoder;
 import fr.lecomptoirdespharmacies.offisanteESignature.ApiClient;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.interceptor.ApiClientRequestInterceptor;
-import fr.lecomptoirdespharmacies.offisanteESignature.client.repository.TokenRepository;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.service.LoginService;
 
 public class CustomApiClient extends ApiClient {
@@ -22,8 +21,8 @@ public class CustomApiClient extends ApiClient {
         return this;
     }
 
-    public CustomApiClient withAddAuthorization(TokenRepository tokenRepository, LoginService loginService) {
-        addAuthorization("access_auth", new ApiClientRequestInterceptor(tokenRepository, loginService));
+    public CustomApiClient withAddAuthorization(LoginService loginService) {
+        addAuthorization("access_auth", new ApiClientRequestInterceptor(loginService));
         return this;
     }
 }

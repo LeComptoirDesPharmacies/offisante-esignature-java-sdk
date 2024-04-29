@@ -4,14 +4,13 @@ import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
 import feign.codec.ErrorDecoder;
-import fr.lecomptoirdespharmacies.offisanteESignature.client.repository.TokenRepository;
+import fr.lecomptoirdespharmacies.offisanteESignature.client.service.LoginService;
 
 public class ApiClientErrorDecoder implements ErrorDecoder {
+    private final LoginService loginService;
 
-    private final TokenRepository tokenRepository;
-
-    public ApiClientErrorDecoder(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
+    public ApiClientErrorDecoder(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @Override
@@ -22,8 +21,9 @@ public class ApiClientErrorDecoder implements ErrorDecoder {
         // Token seems to be expired
         if (status == 401){
             // Reset token and retry
+            loginService.resetToken();
+
             FeignException exception = feign.FeignException.errorStatus(methodKey, response);
-            tokenRepository.save(null);
             return new RetryableException(
                     response.status(),
                     exception.getMessage(),

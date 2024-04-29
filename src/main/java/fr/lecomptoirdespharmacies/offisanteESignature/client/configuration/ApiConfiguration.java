@@ -4,7 +4,6 @@ import fr.lecomptoirdespharmacies.offisanteESignature.ApiClient;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.custom.CustomApiClient;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.decoder.ApiClientErrorDecoder;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.service.LoginService;
-import fr.lecomptoirdespharmacies.offisanteESignature.client.repository.TokenRepository;
 import fr.lecomptoirdespharmacies.offisanteESignature.client.decoder.LoginErrorDecoder;
 
 public class ApiConfiguration {
@@ -38,11 +37,10 @@ public class ApiConfiguration {
      * @return api client
      */
     private ApiClient initializeApiClient(Configuration configuration){
-        TokenRepository tokenRepository = new TokenRepository();
-        LoginService loginService = new LoginService(configuration.getLoginRequest(), loginClient, tokenRepository);
+        LoginService loginService = new LoginService(configuration.getLoginRequest(), loginClient);
         return new CustomApiClient()
-                .withErrorDecoder(new ApiClientErrorDecoder(tokenRepository))
-                .withAddAuthorization(tokenRepository, loginService)
+                .withErrorDecoder(new ApiClientErrorDecoder(loginService))
+                .withAddAuthorization(loginService)
                 .setBasePath(configuration.getBasePath());
     }
 

@@ -2,8 +2,9 @@ package fr.lecomptoirdespharmacies.offisanteESignature.client.service;
 
 import fr.lecomptoirdespharmacies.offisanteESignature.ApiClient;
 import fr.lecomptoirdespharmacies.offisanteESignature.api.DocumentsApi;
+import fr.lecomptoirdespharmacies.offisanteESignature.client.exception.DocumentAlreadyExistsException;
 import fr.lecomptoirdespharmacies.offisanteESignature.model.*;
-import fr.lecomptoirdespharmacies.offisanteESignature.client.exception.DocumentException;
+import fr.lecomptoirdespharmacies.offisanteESignature.client.exception.DocumentCreationException;
 
 public class DocumentService {
     private final ApiClient apiClient;
@@ -12,20 +13,20 @@ public class DocumentService {
         this.apiClient = apiClient;
     }
 
-    public String createDocument(CreateDocumentRequest documentRequest) throws DocumentException {
+    public String createDocument(CreateDocumentRequest documentRequest) throws DocumentCreationException, DocumentAlreadyExistsException {
 
         DocumentsApi documentsApi = apiClient.buildClient(DocumentsApi.class);
         ApiResponse<DocumentResponse> result = documentsApi.createDocumentWithHttpInfo(documentRequest);
 
         if(result.getStatusCode() == 200){
-            throw new DocumentException("Document already created");
+            throw new DocumentAlreadyExistsException("Document already created");
         }
 
         if(result.getStatusCode() == 201){
             return result.getData().getDocumentUrl();
         }
 
-        throw new DocumentException("No document returned by offisante API");
+        throw new DocumentCreationException("No document returned by offisante API");
     }
 
     public String getDocumentStatus(String id){

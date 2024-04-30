@@ -38,7 +38,7 @@ implementation 'fr.lecomptoirdespharmacies:offisante-esignature-java-sdk:0.1.0'
 
 ### Configuration
 
-You need to configure the SDK with your Offisante eSignature API credentials. You can do this by creating a `OffisanteEsignature` object:
+You need to configure the SDK with your Offisante eSignature API credentials. You can do this by creating a `OffisanteESignatureApi` object:
 
 ```java
 String userName    = "xxx";
@@ -65,12 +65,12 @@ try{
                             .createDocument(
                                 documentRequest
                             );
+}catch(DocumentAlreadyExistsException e){
+    // Handle exception
 }catch(DocumentCreationException e){
     // Handle exception
 }
 ```
-
-
 
 ### Get a document status
 

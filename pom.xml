@@ -34,6 +34,38 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.5.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-sdk</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/offisante.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>feign</library>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+                            <additionalProperties>
+                                booleanGetterPrefix=is,hideGenerationTimestamp=true
+                            </additionalProperties>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <apiPackage>fr.lecomptoirdespharmacies.offisante.esignature.api</apiPackage>
+                                <modelPackage>fr.lecomptoirdespharmacies.offisante.esignature.model</modelPackage>
+                                <invokerPackage>fr.lecomptoirdespharmacies.offisante.esignature</invokerPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.0.0-M1</version>
@@ -115,6 +147,7 @@
                         <configuration>
                             <sources>
                                 <source>src/main/java</source>
+                                <source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
                             </sources>
                         </configuration>
                     </execution>

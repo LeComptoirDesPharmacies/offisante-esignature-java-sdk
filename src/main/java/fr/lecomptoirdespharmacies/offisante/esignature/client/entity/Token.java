@@ -25,7 +25,7 @@ public class Token {
         return decodedJWT
                 .getExpiresAtAsInstant()
                 .isBefore(
-                        Instant.now().plus(VALIDITY_MINIMUM_DELAY)
+                        Instant.now().minus(VALIDITY_MINIMUM_DELAY)
                 );
     }
 

@@ -46,12 +46,15 @@ public class LoginService {
     private Token login(){
         AuthenticationApi authApi = apiClient.buildClient(AuthenticationApi.class);
         ApiResponse<ValidTokenResponse> response = authApi.loginWithHttpInfo(loginRequest);
-        tokenRepository.save(new Token(
+
+        Token newToken = new Token(
                 response.getData().getToken(),
                 TokenRepository.DEFAULT_TOKEN_DURATION
-        ));
+        );
 
-        return tokenRepository.findToken();
+        tokenRepository.save(newToken);
+
+        return newToken;
     }
 
     /**

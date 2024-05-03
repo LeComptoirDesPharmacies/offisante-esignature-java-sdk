@@ -6,19 +6,18 @@ import fr.lecomptoirdespharmacies.offisante.esignature.model.ApiResponse;
 import fr.lecomptoirdespharmacies.offisante.esignature.model.LoginRequest;
 import fr.lecomptoirdespharmacies.offisante.esignature.model.ValidTokenResponse;
 import fr.lecomptoirdespharmacies.offisante.esignature.client.entity.Token;
-import fr.lecomptoirdespharmacies.offisante.esignature.client.repository.TokenRepository;
 
 import java.util.Objects;
 
 public class LoginService {
     private final LoginRequest loginRequest;
     private final ApiClient apiClient;
-    private final TokenRepository tokenRepository;
+
+    private Token currentToken;
 
     public LoginService(LoginRequest loginRequest, ApiClient apiClient) {
         this.loginRequest = loginRequest;
         this.apiClient = apiClient;
-        this.tokenRepository = new TokenRepository();
     }
 
     /**
@@ -27,15 +26,13 @@ public class LoginService {
      *
      * @return a valid token
      */
-    public synchronized String getValidToken(){
-        Token token = tokenRepository.findToken();
-
+    public synchronized String getValidAccessToken(){
         // If token is null or expired, create a new token
-        if(Objects.isNull(token) || token.isExpired()) {
-            token = login();
+        if(Objects.isNull(currentToken) || currentToken.isExpired()) {
+            currentToken = login();
         }
 
-        return token.getToken();
+        return currentToken.getToken();
     }
 
     /**
@@ -48,11 +45,8 @@ public class LoginService {
         ApiResponse<ValidTokenResponse> response = authApi.loginWithHttpInfo(loginRequest);
 
         Token newToken = new Token(
-                response.getData().getToken(),
-                TokenRepository.DEFAULT_TOKEN_DURATION
+                response.getData().getToken()
         );
-
-        tokenRepository.save(newToken);
 
         return newToken;
     }
@@ -61,6 +55,6 @@ public class LoginService {
      * Reset a token
      */
     public synchronized void resetToken() {
-        tokenRepository.save(null);
+        this.currentToken = null;
     }
 }

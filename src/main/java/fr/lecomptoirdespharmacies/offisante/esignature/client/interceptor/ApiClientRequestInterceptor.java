@@ -12,6 +12,6 @@ public class ApiClientRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(feign.RequestTemplate template) {
-        template.header("x-access-token", loginService.getValidToken());
+        template.header("x-access-token", loginService.getValidAccessToken());
     }
 }
